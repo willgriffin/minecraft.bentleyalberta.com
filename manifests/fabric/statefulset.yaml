@@ -20,6 +20,17 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: warthog
 
+      # Tolerate home node taints
+      tolerations:
+        - key: "gpu"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+        - key: "location"
+          operator: "Equal"
+          value: "home"
+          effect: "NoSchedule"
+
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

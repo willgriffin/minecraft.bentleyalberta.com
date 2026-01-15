@@ -29,6 +29,15 @@ spec:
   affinity:
     nodeSelector:
       kubernetes.io/hostname: warthog
+    tolerations:
+      - key: "gpu"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "location"
+        operator: "Equal"
+        value: "home"
+        effect: "NoSchedule"
 
   resources:
     requests:

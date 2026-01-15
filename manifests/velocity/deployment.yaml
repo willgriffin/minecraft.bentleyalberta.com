@@ -54,6 +54,8 @@ spec:
               subPath: forwarding.secret
             - name: tmp
               mountPath: /tmp
+            - name: logs
+              mountPath: /app/logs
             - name: plugins-config
               mountPath: /app/plugins/Geyser-Velocity
             - name: floodgate-config
@@ -77,6 +79,8 @@ spec:
           secret:
             secretName: velocity-forwarding
         - name: tmp
+          emptyDir: {}
+        - name: logs
           emptyDir: {}
         - name: plugins-config
           emptyDir: {}
