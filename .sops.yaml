@@ -1,0 +1,6 @@
+creation_rules:
+  # Encrypt Kubernetes secrets in manifests directory
+  # Input files: *.secret.yaml, Output files: *.secret.enc.yaml
+  - path_regex: manifests/.*\.secret\.yaml$
+    age: 'age1zxja08zu7wkczkvwfek2r8zj6hdq0d5rx46f8v8lzajwhjr3499sanxzyc'
+    encrypted_regex: '^(data|stringData)$'

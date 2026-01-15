@@ -1,0 +1,42 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: minecraft-postgres
+  namespace: minecraft
+spec:
+  instances: 1
+
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "128MB"
+      effective_cache_size: "512MB"
+      work_mem: "4MB"
+      maintenance_work_mem: "64MB"
+
+  bootstrap:
+    initdb:
+      database: minecraft
+      owner: minecraft
+      secret:
+        name: minecraft-postgres-credentials
+
+  storage:
+    size: 5Gi
+    storageClass: local-path
+
+  # Pin to warthog for consistent storage location
+  affinity:
+    nodeSelector:
+      kubernetes.io/hostname: warthog
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  monitoring:
+    enablePodMonitor: false

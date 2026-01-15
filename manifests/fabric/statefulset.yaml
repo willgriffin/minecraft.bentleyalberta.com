@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fabric-lobby
+  namespace: minecraft
+  labels:
+    app: fabric-lobby
+spec:
+  serviceName: fabric-lobby
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fabric-lobby
+  template:
+    metadata:
+      labels:
+        app: fabric-lobby
+    spec:
+      # Pin to warthog node for consistent storage and resources
+      nodeSelector:
+        kubernetes.io/hostname: warthog
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      # Graceful shutdown - give Minecraft time to save
+      terminationGracePeriodSeconds: 60
+
+      containers:
+        - name: fabric
+          image: ghcr.io/willgriffin/minecraft/fabric:latest
+          ports:
+            - containerPort: 25565
+              name: minecraft
+              protocol: TCP
+            - containerPort: 25575
+              name: rcon
+              protocol: TCP
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "2000m"
+            limits:
+              memory: "8Gi"
+              cpu: "4000m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: world-data
+              mountPath: /app/world
+            - name: config
+              mountPath: /app/server.properties
+              subPath: server.properties
+            - name: forwarding-secret
+              mountPath: /app/config/FabricProxy-Lite.toml
+              subPath: FabricProxy-Lite.toml
+            - name: scripts
+              mountPath: /app/scripts
+            - name: tmp
+              mountPath: /tmp
+            - name: logs
+              mountPath: /app/logs
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 60
+            periodSeconds: 5
+          # Graceful shutdown via RCON
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - "sleep 5"  # Give time for save
+
+      volumes:
+        - name: world-data
+          persistentVolumeClaim:
+            claimName: fabric-lobby-world
+        - name: config
+          configMap:
+            name: fabric-lobby-config
+        - name: forwarding-secret
+          secret:
+            secretName: velocity-forwarding
+            items:
+              - key: forwarding.secret
+                path: FabricProxy-Lite.toml
+        - name: scripts
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}

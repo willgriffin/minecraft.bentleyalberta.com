@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: velocity-config
+  namespace: minecraft
+data:
+  velocity.toml: |
+    # Velocity Configuration
+    # https://docs.papermc.io/velocity/configuration
+
+    # What port should the proxy listen on?
+    bind = "0.0.0.0:25565"
+
+    # What hostname should be shown in the server list?
+    motd = "<#09add3>Bentley Alberta Minecraft Server"
+
+    # What should we display for the maximum number of players?
+    show-max-players = 100
+
+    # Should we authenticate players with Mojang?
+    online-mode = true
+
+    # If client's ISP/AS sent from this proxy is different from the one from Mojang's
+    # authentication server, the player is kicked.
+    prevent-client-proxy-connections = false
+
+    # Should the proxy send your IP to the backend servers?
+    player-info-forwarding-mode = "modern"
+
+    # A unique secret key for player info forwarding
+    # This is read from /app/forwarding.secret at runtime
+    forwarding-secret-file = "forwarding.secret"
+
+    # Announce whether the proxy supports Forge/Fabric
+    announce-forge = false
+
+    # If enabled, players will be kicked if they are not migrated to Mojang
+    kick-existing-players = false
+
+    # Ping passthrough
+    ping-passthrough = "DISABLED"
+
+    # Enable player listing on the server list
+    enable-player-address-logging = true
+
+    [servers]
+    # Configure your servers here
+    lobby = "fabric-lobby:25565"
+
+    # In what order we should try servers when a player logs in or is kicked from a server
+    try = ["lobby"]
+
+    [forced-hosts]
+    # Configure forced hosts here
+
+    [advanced]
+    # How large a Minecraft packet has to be before we compress it
+    compression-threshold = 256
+
+    # How much compression should be done (from 0-9)
+    compression-level = -1
+
+    # How fast (in milliseconds) are clients allowed to connect after a previous connection?
+    login-ratelimit = 3000
+
+    # Specify a custom timeout for connection timeouts here
+    connection-timeout = 5000
+
+    # Specify a read timeout for connections here
+    read-timeout = 30000
+
+    # Enables logging of player IPs in the console
+    haproxy-protocol = false
+
+    # Enables TCP fast open support on the proxy
+    tcp-fast-open = false
+
+    # Enables BungeeCord plugin messaging channel support on Velocity
+    bungee-plugin-message-channel = true
+
+    # Shows ping requests to the proxy in the console
+    show-ping-requests = false
+
+    # By default, Velocity will attempt to gracefully handle situations where the user unexpectedly
+    # loses connection to the server without being disconnected
+    failover-on-unexpected-server-disconnect = true
+
+    # Announces the proxy commands to any clients that are 1.13 and above
+    announce-proxy-commands = true
+
+    # Enables logging commands executed by players
+    log-command-executions = false
+
+    # Enables logging player connections
+    log-player-connections = true
+
+    [query]
+    # Whether to enable responding to GameSpy 4 query responses
+    enabled = false
+
+    # If query is enabled, on what port should the query protocol listen on?
+    port = 25565
+
+    # This is the map name that is reported to the query services
+    map = "Velocity"
+
+    # Whether plugins should be shown in query response
+    show-plugins = false

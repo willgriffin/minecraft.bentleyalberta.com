@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velocity-proxy
+  namespace: minecraft
+  labels:
+    app: velocity-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: velocity-proxy
+  template:
+    metadata:
+      labels:
+        app: velocity-proxy
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: velocity
+          image: ghcr.io/willgriffin/minecraft/velocity:latest
+          ports:
+            - containerPort: 25565
+              name: java
+              protocol: TCP
+            - containerPort: 19132
+              name: bedrock
+              protocol: UDP
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: config
+              mountPath: /app/velocity.toml
+              subPath: velocity.toml
+            - name: forwarding-secret
+              mountPath: /app/forwarding.secret
+              subPath: forwarding.secret
+            - name: tmp
+              mountPath: /tmp
+            - name: plugins-config
+              mountPath: /app/plugins/Geyser-Velocity
+            - name: floodgate-config
+              mountPath: /app/plugins/floodgate
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+      volumes:
+        - name: config
+          configMap:
+            name: velocity-config
+        - name: forwarding-secret
+          secret:
+            secretName: velocity-forwarding
+        - name: tmp
+          emptyDir: {}
+        - name: plugins-config
+          emptyDir: {}
+        - name: floodgate-config
+          emptyDir: {}

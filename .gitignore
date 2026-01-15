@@ -1,0 +1,30 @@
+# Nix
+result
+result-*
+.direnv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets - never commit unencrypted secrets
+# Templates are OK to commit (they contain placeholders)
+# Encrypted secrets (.secret.enc.yaml) are OK to commit
+*.secret.yaml
+!*.secret.enc.yaml
+
+# Build artifacts
+*.jar
+*.zip
+
+# Local testing
+world/
+logs/
+crash-reports/

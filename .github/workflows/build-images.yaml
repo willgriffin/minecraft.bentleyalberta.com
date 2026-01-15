@@ -1,0 +1,100 @@
+name: Build Minecraft Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'images/**'
+      - 'flake.nix'
+      - 'flake.lock'
+  workflow_dispatch:
+  schedule:
+    # Weekly build on Sundays at 4am UTC
+    - cron: '0 4 * * 0'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/minecraft
+
+jobs:
+  build-velocity:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build Velocity Image
+        run: nix build .#velocity-image
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load and Push Image
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          # Load the image from Nix result
+          docker load < result
+
+          # Tag with SHA and timestamp
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          SHA_SHORT="${COMMIT_SHA:0:7}"
+
+          docker tag velocity:latest "${{ env.IMAGE_PREFIX }}/velocity:${SHA_SHORT}"
+          docker tag velocity:latest "${{ env.IMAGE_PREFIX }}/velocity:${TIMESTAMP}"
+          docker tag velocity:latest "${{ env.IMAGE_PREFIX }}/velocity:latest"
+
+          docker push "${{ env.IMAGE_PREFIX }}/velocity:${SHA_SHORT}"
+          docker push "${{ env.IMAGE_PREFIX }}/velocity:${TIMESTAMP}"
+          docker push "${{ env.IMAGE_PREFIX }}/velocity:latest"
+
+  build-fabric:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build Fabric Image
+        run: nix build .#fabric-image
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load and Push Image
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          # Load the image from Nix result
+          docker load < result
+
+          # Tag with SHA and timestamp
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          SHA_SHORT="${COMMIT_SHA:0:7}"
+
+          docker tag fabric:latest "${{ env.IMAGE_PREFIX }}/fabric:${SHA_SHORT}"
+          docker tag fabric:latest "${{ env.IMAGE_PREFIX }}/fabric:${TIMESTAMP}"
+          docker tag fabric:latest "${{ env.IMAGE_PREFIX }}/fabric:latest"
+
+          docker push "${{ env.IMAGE_PREFIX }}/fabric:${SHA_SHORT}"
+          docker push "${{ env.IMAGE_PREFIX }}/fabric:${TIMESTAMP}"
+          docker push "${{ env.IMAGE_PREFIX }}/fabric:latest"
