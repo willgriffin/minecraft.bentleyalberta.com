@@ -7,7 +7,7 @@ in {
   # Fabric Server Launcher
   fabricServer = pkgs.fetchurl {
     url = "https://meta.fabricmc.net/v2/versions/loader/${minecraftVersion}/${fabricLoaderVersion}/${installerVersion}/server/jar";
-    hash = "sha256-YGkfY/kNWs4ojo8JZOKmnDyqnaFIp9G6ecjAC8zwJaM=";
+    hash = "sha256-X6L7m3zEImLXUxiJ2gYEBDxZ5YbAEqJLXQxd382AvUE=";
   };
 
   # Fabric API - Required by most mods
