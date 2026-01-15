@@ -28,6 +28,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
 
       - uses: DeterminateSystems/magic-nix-cache-action@main
+        continue-on-error: true  # Cache is optional, don't fail build
 
       - name: Build Velocity Image
         run: nix build .#velocity-image
@@ -69,6 +70,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
 
       - uses: DeterminateSystems/magic-nix-cache-action@main
+        continue-on-error: true  # Cache is optional, don't fail build
 
       - name: Build Fabric Image
         run: nix build .#fabric-image
