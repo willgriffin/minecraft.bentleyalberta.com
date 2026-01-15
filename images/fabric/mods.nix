@@ -7,19 +7,19 @@ in {
   # Fabric Server Launcher
   fabricServer = pkgs.fetchurl {
     url = "https://meta.fabricmc.net/v2/versions/loader/${minecraftVersion}/${fabricLoaderVersion}/${installerVersion}/server/jar";
-    hash = "sha256-18r5y360ph68g6xd39s8l6fslg4wlvi682cgiqlcwnhdz5iiysb0";
+    hash = "sha256-YGkfY/kNWs4ojo8JZOKmnDyqnaFIp9G6ecjAC8zwJaM=";
   };
 
   # Fabric API - Required by most mods
   fabricApi = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/P7dR8mSH/versions/m6zu1K31/fabric-api-0.116.7+1.21.1.jar";
-    hash = "sha256-1942higbngfbm281c1bsdfx61967lbaxn03a04w5lhcpik28q088";
+    hash = "sha256-CAGMxIyXQVo4AWoA29Wix6Rgumt6BRaQqMs9u16EgqQ=";
   };
 
   # FabricProxy-Lite - Velocity modern forwarding support
   fabricProxyLite = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/8dI2tmqs/versions/KqB3UA0q/FabricProxy-Lite-2.10.1.jar";
-    hash = "sha256-0hn7253jnisdpis9b8gv2wrl56hgn5ynmb1zmiwvdpx5qxi7nwrn";
+    hash = "sha256-NnN7Ysel37Z5rD+san2xD5pCMxf7oZV0vE1HK0cRx0I=";
   };
 
   # Version metadata for CI/CD
