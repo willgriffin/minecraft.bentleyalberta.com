@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rcon-web
+  namespace: minecraft
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # OAuth2 Proxy protection via GitHub SSO
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.happyvertical.com/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.happyvertical.com/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - rcon.minecraft.bentleyalberta.com
+      secretName: rcon-web-tls
+  rules:
+    - host: rcon.minecraft.bentleyalberta.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rcon-web
+                port:
+                  number: 4326

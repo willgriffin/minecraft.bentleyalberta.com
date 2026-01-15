@@ -40,10 +40,10 @@ data:
     max-tick-time=60000
     rate-limit=0
 
-    # RCON settings (disabled for now - use internal cluster access)
-    enable-rcon=false
+    # RCON settings - enabled for admin console
+    enable-rcon=true
     rcon.port=25575
-    rcon.password=
+    rcon.password=3acf17eb7465b0159da5334b01729ae1
 
     # Performance
     sync-chunk-writes=true

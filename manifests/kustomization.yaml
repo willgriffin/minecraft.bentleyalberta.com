@@ -8,7 +8,7 @@ resources:
   - postgres/
   - velocity/
   - fabric/
-  # - admin/  # TODO: Enable when ready
+  - admin/
 
 commonLabels:
   app.kubernetes.io/part-of: minecraft-realm

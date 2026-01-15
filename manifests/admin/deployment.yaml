@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rcon-web
+  namespace: minecraft
+  labels:
+    app: rcon-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rcon-web
+  template:
+    metadata:
+      labels:
+        app: rcon-web
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: rcon-web
+          image: itzg/rcon:latest
+          ports:
+            - containerPort: 4326
+              name: http
+              protocol: TCP
+          env:
+            - name: RWA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rcon-credentials
+                  key: username
+            - name: RWA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rcon-credentials
+                  key: password
+            - name: RWA_ADMIN
+              value: "true"
+            # Pre-configure the Fabric server connection
+            - name: RWA_RCON_HOST
+              value: "fabric-lobby"
+            - name: RWA_RCON_PORT
+              value: "25575"
+            - name: RWA_RCON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rcon-credentials
+                  key: rcon-password
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: data
+              mountPath: /opt/rcon-web-admin/db
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: data
+          emptyDir: {}

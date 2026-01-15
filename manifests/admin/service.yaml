@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rcon-web
+  namespace: minecraft
+  labels:
+    app: rcon-web
+spec:
+  type: ClusterIP
+  selector:
+    app: rcon-web
+  ports:
+    - port: 4326
+      targetPort: 4326
+      protocol: TCP
+      name: http
