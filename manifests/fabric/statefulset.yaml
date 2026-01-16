@@ -56,7 +56,7 @@ spec:
 
               # Create FabricProxy-Lite config with secret
               SECRET=$(cat /app-secret/forwarding.secret)
-              printf 'hackOnlineMode = true\nhackEarlySend = true\nhackMessageChain = true\ndisconnectMessage = "Connection error"\nsecret = "%s"\n' "$SECRET" > /app-config/FabricProxy-Lite.toml
+              printf 'hackOnlineMode = false\nhackEarlySend = false\nhackMessageChain = true\ndisconnectMessage = "Connection error"\nsecret = "%s"\n' "$SECRET" > /app-config/FabricProxy-Lite.toml
               chmod 644 /app-config/FabricProxy-Lite.toml
               echo "Config file created:"
               cat /app-config/FabricProxy-Lite.toml
