@@ -84,10 +84,8 @@ spec:
               mountPath: /tmp
             - name: logs
               mountPath: /app/logs
-            - name: plugins-config
-              mountPath: /app/plugins/Geyser-Velocity
-            - name: floodgate-config
-              mountPath: /app/plugins/floodgate
+            - name: plugins
+              mountPath: /app/plugins
           livenessProbe:
             tcpSocket:
               port: 25565
@@ -112,7 +110,5 @@ spec:
           emptyDir: {}
         - name: logs
           emptyDir: {}
-        - name: plugins-config
-          emptyDir: {}
-        - name: floodgate-config
+        - name: plugins
           emptyDir: {}
