@@ -9,16 +9,20 @@ in {
     contents = [
       jre
       pkgs.cacert
+      pkgs.busybox  # For debugging (ls, cat, sh, etc.)
     ];
 
     extraCommands = ''
-      mkdir -p app/mods app/config app/scripts app/world
+      mkdir -p app/mods app/config app/scripts app/world app/logs
       cp ${mods.fabricServer} app/fabric-server-launcher.jar
       cp ${mods.fabricApi} app/mods/fabric-api.jar
       cp ${mods.fabricProxyLite} app/mods/FabricProxy-Lite.jar
 
       # Create eula.txt
       echo "eula=true" > app/eula.txt
+
+      # Set ownership for user 1000 (server needs to write files)
+      chown -R 1000:1000 app
     '';
 
     config = {
