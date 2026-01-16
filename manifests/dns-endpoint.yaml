@@ -1,0 +1,13 @@
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: minecraft-dns
+  namespace: minecraft
+spec:
+  endpoints:
+    # Main Minecraft domain - points to NGINX ingress for TCP passthrough
+    - dnsName: minecraft.bentleyalberta.com
+      recordType: A
+      targets:
+        - 135.181.115.252
+      recordTTL: 300

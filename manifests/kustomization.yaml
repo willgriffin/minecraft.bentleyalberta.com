@@ -5,6 +5,7 @@ namespace: minecraft
 
 resources:
   - namespace.yaml
+  - dns-endpoint.yaml
   - postgres/
   - velocity/
   - fabric/
