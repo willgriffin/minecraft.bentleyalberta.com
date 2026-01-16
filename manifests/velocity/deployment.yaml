@@ -88,12 +88,8 @@ spec:
               mountPath: /app/logs
             - name: lang
               mountPath: /app/lang
-            - name: bstats
-              mountPath: /app/plugins/bstats
-            - name: geyser-data
-              mountPath: /app/plugins/Geyser-Velocity
-            - name: floodgate-data
-              mountPath: /app/plugins/floodgate
+            - name: plugins
+              mountPath: /app/plugins
           livenessProbe:
             tcpSocket:
               port: 25565
@@ -120,9 +116,5 @@ spec:
           emptyDir: {}
         - name: lang
           emptyDir: {}
-        - name: bstats
-          emptyDir: {}
-        - name: geyser-data
-          emptyDir: {}
-        - name: floodgate-data
+        - name: plugins
           emptyDir: {}
