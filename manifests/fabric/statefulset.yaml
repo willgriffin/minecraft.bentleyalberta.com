@@ -79,6 +79,12 @@ spec:
               mountPath: /tmp
             - name: logs
               mountPath: /app/logs
+            - name: fabric-cache
+              mountPath: /app/.fabric
+            - name: libraries
+              mountPath: /app/libraries
+            - name: versions
+              mountPath: /app/versions
           livenessProbe:
             tcpSocket:
               port: 25565
@@ -117,4 +123,10 @@ spec:
         - name: tmp
           emptyDir: {}
         - name: logs
+          emptyDir: {}
+        - name: fabric-cache
+          emptyDir: {}
+        - name: libraries
+          emptyDir: {}
+        - name: versions
           emptyDir: {}
