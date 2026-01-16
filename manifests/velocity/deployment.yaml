@@ -23,7 +23,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
-      # Init container copies config files to writable volume
+      # Init containers: copy config and plugins to writable volumes
       initContainers:
         - name: copy-config
           image: busybox:1.36
@@ -84,8 +84,14 @@ spec:
               mountPath: /tmp
             - name: logs
               mountPath: /app/logs
-            - name: plugins
-              mountPath: /app/plugins
+            - name: lang
+              mountPath: /app/lang
+            - name: bstats
+              mountPath: /app/plugins/bstats
+            - name: geyser-data
+              mountPath: /app/plugins/Geyser-Velocity
+            - name: floodgate-data
+              mountPath: /app/plugins/floodgate
           livenessProbe:
             tcpSocket:
               port: 25565
@@ -110,5 +116,11 @@ spec:
           emptyDir: {}
         - name: logs
           emptyDir: {}
-        - name: plugins
+        - name: lang
+          emptyDir: {}
+        - name: bstats
+          emptyDir: {}
+        - name: geyser-data
+          emptyDir: {}
+        - name: floodgate-data
           emptyDir: {}
