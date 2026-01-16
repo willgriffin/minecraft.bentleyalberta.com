@@ -46,18 +46,11 @@ spec:
       initContainers:
         - name: generate-config
           image: busybox:1.36
-          command:
-            - /bin/sh
-            - -c
+          command: ["/bin/sh", "-c"]
+          args:
             - |
               SECRET=$(cat /secret/forwarding.secret)
-              cat > /app-config/FabricProxy-Lite.toml << EOF
-              # FabricProxy-Lite configuration - generated from secret
-              hackOnlineMode = true
-              hackEarlySend = false
-              disconnectMessage = "Connection error"
-              secret = "$SECRET"
-              EOF
+              printf 'secret = "%s"\nhackOnlineMode = true\nhackEarlySend = false\ndisconnectMessage = "Connection error"\n' "$SECRET" > /app-config/FabricProxy-Lite.toml
               chmod 644 /app-config/FabricProxy-Lite.toml
           volumeMounts:
             - name: forwarding-secret-raw
