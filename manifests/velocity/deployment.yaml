@@ -32,9 +32,11 @@ spec:
             - -c
             - |
               cp /config-readonly/velocity.toml /app-config/velocity.toml
-              cp /secret-readonly/forwarding.secret /app-config/forwarding.secret
+              # Strip trailing newlines from secret to ensure exact match with backend
+              cat /secret-readonly/forwarding.secret | tr -d '\n\r' > /app-config/forwarding.secret
               chmod 644 /app-config/velocity.toml
               chmod 600 /app-config/forwarding.secret
+              echo "Secret length: $(wc -c < /app-config/forwarding.secret)"
           volumeMounts:
             - name: config-readonly
               mountPath: /config-readonly

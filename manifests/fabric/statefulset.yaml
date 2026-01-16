@@ -49,9 +49,11 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              SECRET=$(cat /secret/forwarding.secret)
+              SECRET=$(cat /secret/forwarding.secret | tr -d '\n\r')
               printf 'secret = "%s"\nhackOnlineMode = true\nhackEarlySend = false\ndisconnectMessage = "Connection error"\n' "$SECRET" > /app-config/FabricProxy-Lite.toml
               chmod 644 /app-config/FabricProxy-Lite.toml
+              echo "Generated FabricProxy-Lite config:"
+              cat /app-config/FabricProxy-Lite.toml
           volumeMounts:
             - name: forwarding-secret-raw
               mountPath: /secret
