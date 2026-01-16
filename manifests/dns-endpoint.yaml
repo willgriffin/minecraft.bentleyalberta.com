@@ -5,9 +5,15 @@ metadata:
   namespace: minecraft
 spec:
   endpoints:
-    # Main Minecraft domain - points to NGINX ingress for TCP passthrough
+    # Main Minecraft domain - points to NGINX ingress for TCP passthrough (Java)
     - dnsName: minecraft.bentleyalberta.com
       recordType: A
       targets:
         - 135.181.115.252
+      recordTTL: 300
+    # Bedrock domain - points to patdown1 UDP forwarder
+    - dnsName: bedrock.minecraft.bentleyalberta.com
+      recordType: A
+      targets:
+        - 3.223.173.88
       recordTTL: 300

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bedrock-udp-forwarder
+  namespace: minecraft
+  labels:
+    app: bedrock-udp-forwarder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bedrock-udp-forwarder
+  template:
+    metadata:
+      labels:
+        app: bedrock-udp-forwarder
+    spec:
+      # Run on patdown1 (Lightsail) for US-based public IP
+      nodeSelector:
+        kubernetes.io/hostname: patdown1
+
+      containers:
+        - name: socat
+          image: alpine/socat:1.8.0.1
+          args:
+            - "-d"
+            - "-d"
+            - "UDP-LISTEN:19132,fork,reuseaddr"
+            - "UDP:100.88.78.19:19132"
+          ports:
+            - containerPort: 19132
+              hostPort: 19132
+              protocol: UDP
+              name: bedrock
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
