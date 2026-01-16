@@ -23,6 +23,34 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
+      # Init container copies config files to writable volume
+      initContainers:
+        - name: copy-config
+          image: busybox:1.36
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /config-readonly/velocity.toml /app-config/velocity.toml
+              cp /secret-readonly/forwarding.secret /app-config/forwarding.secret
+              chmod 644 /app-config/velocity.toml
+              chmod 600 /app-config/forwarding.secret
+          volumeMounts:
+            - name: config-readonly
+              mountPath: /config-readonly
+            - name: secret-readonly
+              mountPath: /secret-readonly
+            - name: app-config
+              mountPath: /app-config
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop: ["ALL"]
+
       containers:
         - name: velocity
           image: ghcr.io/willgriffin/minecraft/velocity:latest
@@ -42,14 +70,14 @@ spec:
               cpu: "1000m"
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false  # Velocity needs to write config/plugin data
+            readOnlyRootFilesystem: false  # Velocity needs to write plugin data
             capabilities:
               drop: ["ALL"]
           volumeMounts:
-            - name: config
+            - name: app-config
               mountPath: /app/velocity.toml
               subPath: velocity.toml
-            - name: forwarding-secret
+            - name: app-config
               mountPath: /app/forwarding.secret
               subPath: forwarding.secret
             - name: tmp
@@ -72,12 +100,14 @@ spec:
             periodSeconds: 5
 
       volumes:
-        - name: config
+        - name: config-readonly
           configMap:
             name: velocity-config
-        - name: forwarding-secret
+        - name: secret-readonly
           secret:
             secretName: velocity-forwarding
+        - name: app-config
+          emptyDir: {}
         - name: tmp
           emptyDir: {}
         - name: logs
