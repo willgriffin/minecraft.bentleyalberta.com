@@ -32,7 +32,8 @@ data:
     forwarding-secret-file = "forwarding.secret"
 
     # Announce whether the proxy supports Forge/Fabric
-    announce-forge = false
+    # Set to true for Fabric backend servers
+    announce-forge = true
 
     # If enabled, players will be kicked if they are not migrated to Mojang
     kick-existing-players = false
@@ -64,7 +65,7 @@ data:
     login-ratelimit = 3000
 
     # Specify a custom timeout for connection timeouts here
-    connection-timeout = 5000
+    connection-timeout = 30000
 
     # Specify a read timeout for connections here
     read-timeout = 30000
