@@ -93,6 +93,8 @@ spec:
               value: "/app/secrets/forwarding.secret"
             - name: FABRIC_PROXY_HACK_ONLINE_MODE
               value: "true"
+            - name: FABRIC_PROXY_HACK_EARLY_SEND
+              value: "true"
             - name: FABRIC_PROXY_HACK_MESSAGE_CHAIN
               value: "true"
             - name: FABRIC_PROXY_DISCONNECT_MESSAGE
