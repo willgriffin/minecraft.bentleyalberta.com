@@ -31,6 +31,7 @@ in {
         "-XX:+UnlockExperimentalVMOptions"
         "-XX:+ParallelRefProcEnabled"
         "-XX:+AlwaysPreTouch"
+        "-Dvelocity.packet-decode-logging=true"
         "-jar"
         "velocity.jar"
       ];
