@@ -14,8 +14,9 @@ in {
     extraCommands = ''
       mkdir -p app/plugins
       cp ${plugins.velocity} app/velocity.jar
-      cp ${plugins.geyser} app/plugins/Geyser-Velocity.jar
-      cp ${plugins.floodgate} app/plugins/floodgate-velocity.jar
+      # TEMPORARILY DISABLED for debugging - Geyser/Floodgate may interfere with FabricProxy-Lite
+      # cp ${plugins.geyser} app/plugins/Geyser-Velocity.jar
+      # cp ${plugins.floodgate} app/plugins/floodgate-velocity.jar
     '';
 
     config = {
