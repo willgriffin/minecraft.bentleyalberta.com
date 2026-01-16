@@ -20,9 +20,6 @@ in {
 
       # Create eula.txt
       echo "eula=true" > app/eula.txt
-
-      # Set ownership for user 1000 (server needs to write files)
-      chown -R 1000:1000 app
     '';
 
     config = {
