@@ -42,7 +42,7 @@ spec:
               cpu: "1000m"
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false  # Velocity needs to write config/plugin data
             capabilities:
               drop: ["ALL"]
           volumeMounts:

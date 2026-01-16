@@ -5,8 +5,9 @@ metadata:
   namespace: minecraft
 data:
   velocity.toml: |
-    # Velocity Configuration
+    # Velocity Configuration v2.0
     # https://docs.papermc.io/velocity/configuration
+    config-version = "2.6"
 
     # What port should the proxy listen on?
     bind = "0.0.0.0:25565"
@@ -27,8 +28,7 @@ data:
     # Should the proxy send your IP to the backend servers?
     player-info-forwarding-mode = "modern"
 
-    # A unique secret key for player info forwarding
-    # This is read from /app/forwarding.secret at runtime
+    # A unique secret key for player info forwarding (read from file)
     forwarding-secret-file = "forwarding.secret"
 
     # Announce whether the proxy supports Forge/Fabric
